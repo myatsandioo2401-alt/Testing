@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LENS & FRAME — Videography Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --off-white: #f2ede6;
+    --gold: #c9a84c;
+    --gold-light: #e8cc80;
+    --dark-brown: #1a1510;
+    --mid: #2e2820;
+    --text-muted: #8a7d6b;
+    --accent-red: #c44a2a;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--off-white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 10px; height: 10px;
+    background: var(--gold);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(201,168,76,0.5);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease-out, width 0.3s, height 0.3s;
+  }
+  body:hover .cursor { opacity: 1; }
+
+  /* Nav */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 24px 48px;
+    display: flex; justify-content: space-between; align-items: center;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.95), transparent);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--off-white);
+    text-decoration: none;
+    opacity: 0.7;
+    transition: opacity 0.3s, color 0.3s;
+  }
+  .nav-links a:hover { opacity: 1; color: var(--gold); }
+
+  /* Hero */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 0 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 70% 50%, rgba(201,168,76,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 20% 80%, rgba(196,74,42,0.06) 0%, transparent 50%),
+      linear-gradient(135deg, #0a0a0a 0%, #1a1510 100%);
+  }
+  .hero-grain {
+    position: absolute; inset: 0;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    background-size: 200px;
+  }
+
+  .hero-line {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--gold) 30%, var(--gold) 70%, transparent);
+    left: 48px;
+    opacity: 0.3;
+  }
+
+  .hero-content { position: relative; z-index: 1; max-width: 900px; }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 28px;
+    display: flex; align-items: center; gap: 16px;
+    animation: fadeUp 0.8s ease 0.2s both;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 40px; height: 1px;
+    background: var(--gold);
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 900;
+    line-height: 0.95;
+    margin-bottom: 32px;
+    animation: fadeUp 0.8s ease 0.4s both;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+    font-weight: 400;
+  }
+
+  .hero-sub {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--text-muted);
+    max-width: 480px;
+    margin-bottom: 48px;
+    animation: fadeUp 0.8s ease 0.6s both;
+  }
+
+  .hero-cta {
+    display: flex; gap: 20px; flex-wrap: wrap;
+    animation: fadeUp 0.8s ease 0.8s both;
+  }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 16px 36px;
+    background: var(--gold);
+    color: var(--black);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.3s, transform 0.2s;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+  .btn-outline {
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 16px 36px;
+    border: 1px solid rgba(242,237,230,0.3);
+    color: var(--off-white);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: border-color 0.3s, transform 0.2s;
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 40px; right: 48px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    animation: fadeUp 0.8s ease 1s both;
+  }
+  .scroll-line {
+    width: 1px; height: 60px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 2s ease infinite;
+  }
+
+  /* Services */
+  .services { padding: 120px 48px; position: relative; }
+  .services-header {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 48px; margin-bottom: 80px; align-items: end;
+  }
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::before { content: ''; width: 24px; height: 1px; background: var(--gold); }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    line-height: 1.1;
+    font-weight: 700;
+  }
+  .section-title em { font-style: italic; color: var(--gold); font-weight: 400; }
+
+  .section-desc {
+    color: var(--text-muted);
+    line-height: 1.8;
+    font-size: 0.95rem;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  .service-card {
+    background: var(--dark-brown);
+    padding: 48px 36px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.4s;
+    border-top: 1px solid rgba(201,168,76,0.15);
+  }
+  .service-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 2px;
+    background: var(--gold);
+    transition: width 0.4s ease;
+  }
+  .service-card:hover { background: var(--mid); }
+  .service-card:hover::after { width: 100%; }
+
+  .service-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    font-weight: 900;
+    color: rgba(201,168,76,0.08);
+    line-height: 1;
+    margin-bottom: 24px;
+    transition: color 0.4s;
+  }
+  .service-card:hover .service-num { color: rgba(201,168,76,0.15); }
+
+  .service-icon {
+    width: 48px; height: 48px;
+    margin-bottom: 20px;
+    color: var(--gold);
+    opacity: 0.8;
+  }
+
+  .service-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .service-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+  .service-tag {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid rgba(201,168,76,0.3);
+    padding: 4px 10px;
+  }
+
+  /* Packages */
+  .packages {
+    padding: 120px 48px;
+    background: var(--dark-brown);
+    position: relative;
+  }
+  .packages::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+  }
+
+  .packages-inner { max-width: 1200px; margin: 0 auto; }
+
+  .packages-header { margin-bottom: 64px; }
+
+  .pricing-tabs {
+    display: flex; gap: 0; margin-bottom: 48px;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+  }
+  .tab-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    padding: 14px 28px;
+    cursor: none;
+    transition: color 0.3s;
+    position: relative;
+  }
+  .tab-btn::after {
+    content: '';
+    position: absolute; bottom: -1px; left: 0; right: 0;
+    height: 2px; background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+  }
+  .tab-btn.active { color: var(--gold); }
+  .tab-btn.active::after { transform: scaleX(1); }
+
+  .pricing-panel { display: none; }
+  .pricing-panel.active { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+
+  .price-card {
+    background: var(--black);
+    border: 1px solid rgba(201,168,76,0.12);
+    padding: 40px 36px;
+    position: relative;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .price-card:hover { border-color: rgba(201,168,76,0.4); transform: translateY(-4px); }
+  .price-card.featured {
+    border-color: var(--gold);
+    background: linear-gradient(135deg, rgba(201,168,76,0.05), transparent);
+  }
+  .price-card.featured::before {
+    content: 'POPULAR';
+    position: absolute; top: -1px; right: 24px;
+    background: var(--gold);
+    color: var(--black);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    padding: 4px 10px;
+    font-weight: 500;
+  }
+
+  .price-tier {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+  .price-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .price-amount {
+    display: flex; align-items: baseline; gap: 6px;
+    margin-bottom: 4px;
+  }
+  .price-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--gold);
+  }
+  .price-currency {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+  .price-note {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+  .price-divider {
+    height: 1px;
+    background: rgba(201,168,76,0.15);
+    margin-bottom: 24px;
+  }
+  .price-features { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .price-features li {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    display: flex; align-items: flex-start; gap: 10px;
+    line-height: 1.5;
+  }
+  .price-features li::before {
+    content: '—';
+    color: var(--gold);
+    opacity: 0.6;
+    flex-shrink: 0;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .weekend-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-top: 48px;
+    padding: 12px 24px;
+    border: 1px solid rgba(196,74,42,0.4);
+    background: rgba(196,74,42,0.06);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #e07055;
+  }
+  .weekend-badge::before {
+    content: '●';
+    color: var(--accent-red);
+    animation: blink 1.5s ease infinite;
+  }
+
+  /* Portfolio showcase */
+  .portfolio { padding: 120px 48px; }
+
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 3px;
+    margin-top: 72px;
+  }
+  .portfolio-item {
+    position: relative;
+    overflow: hidden;
+    background: var(--dark-brown);
+    cursor: none;
+  }
+  .portfolio-item:first-child { grid-row: 1 / 3; }
+
+  .portfolio-thumb {
+    aspect-ratio: 1;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .portfolio-item:first-child .portfolio-thumb { aspect-ratio: 3/4; height: 100%; }
+
+  .thumb-bg {
+    position: absolute; inset: 0;
+    transition: transform 0.6s ease;
+  }
+  .portfolio-item:hover .thumb-bg { transform: scale(1.05); }
+
+  .thumb-play {
+    position: relative; z-index: 1;
+    width: 64px; height: 64px;
+    border: 1px solid rgba(242,237,230,0.4);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  .portfolio-item:hover .thumb-play { opacity: 1; transform: scale(1); }
+  .thumb-play svg { width: 24px; height: 24px; fill: white; margin-left: 3px; }
+
+  .portfolio-info {
+    padding: 20px 24px;
+    background: var(--dark-brown);
+    border-top: 1px solid rgba(201,168,76,0.1);
+  }
+  .portfolio-cat {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+  .portfolio-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  /* Gradient placeholders for portfolio */
+  .grad-1 { background: linear-gradient(135deg, #1a0f1f 0%, #3d1a2e 40%, #6b2d4a 100%); }
+  .grad-2 { background: linear-gradient(135deg, #0f1a1a 0%, #1a3d3a 50%, #2d6b5a 100%); }
+  .grad-3 { background: linear-gradient(135deg, #1a1a0f 0%, #3d3a1a 50%, #6b5a2d 100%); }
+  .grad-4 { background: linear-gradient(135deg, #1a0f0f 0%, #3d1a1a 50%, #6b2d2d 100%); }
+  .grad-5 { background: linear-gradient(135deg, #0f0f1a 0%, #1a1a3d 50%, #2d2d6b 100%); }
+
+  /* Contact */
+  .contact {
+    padding: 120px 48px;
+    background: var(--dark-brown);
+    position: relative;
+  }
+  .contact::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+  }
+
+  .contact-inner {
+    max-width: 800px; margin: 0 auto; text-align: center;
+  }
+  .contact-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 900;
+    line-height: 1.05;
+    margin-bottom: 24px;
+  }
+  .contact-title em { font-style: italic; color: var(--gold); font-weight: 400; }
+
+  .contact-sub {
+    color: var(--text-muted);
+    margin-bottom: 56px;
+    font-size: 0.95rem;
+    line-height: 1.8;
+  }
+
+  .contact-options {
+    display: flex; flex-direction: column; gap: 16px; align-items: center;
+    margin-bottom: 56px;
+  }
+  .contact-link {
+    display: flex; align-items: center; gap: 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    color: var(--off-white);
+    text-decoration: none;
+    transition: color 0.3s;
+    padding: 14px 24px;
+    border: 1px solid rgba(201,168,76,0.15);
+    width: 320px; justify-content: center;
+  }
+  .contact-link:hover { color: var(--gold); border-color: rgba(201,168,76,0.4); }
+  .contact-link svg { width: 18px; height: 18px; opacity: 0.6; }
+
+  .availability {
+    display: flex; justify-content: center; gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    align-items: center;
+  }
+  .avail-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #4caf7d;
+    animation: blink 2s ease infinite;
+  }
+
+  /* Footer */
+  footer {
+    padding: 32px 48px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid rgba(201,168,76,0.1);
+  }
+  footer p {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  /* Floating reel ticker */
+  .ticker {
+    background: var(--gold);
+    padding: 12px 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .ticker-inner {
+    display: inline-block;
+    animation: ticker 20s linear infinite;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--black);
+    font-weight: 500;
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+  .reveal-delay-5 { transition-delay: 0.5s; }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    .nav-links { display: none; }
+    .hero { padding: 0 24px; }
+    .services, .packages, .portfolio, .contact { padding: 80px 24px; }
+    .services-header { grid-template-columns: 1fr; }
+    .services-grid { grid-template-columns: 1fr; }
+    .portfolio-grid { grid-template-columns: 1fr; }
+    .portfolio-item:first-child { grid-row: auto; }
+    footer { padding: 24px; flex-direction: column; gap: 8px; text-align: center; }
+    body { cursor: auto; }
+    .cursor, .cursor-ring { display: none; }
+    .pricing-panel.active { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-logo">Lens & Frame</div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#portfolio">Work</a></li>
+    <li><a href="#packages">Pricing</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- Ticker -->
+<div class="ticker">
+  <span class="ticker-inner">
+    Wedding &nbsp;·&nbsp; Event &nbsp;·&nbsp; Fashion &nbsp;·&nbsp; Real Estate &nbsp;·&nbsp; Automotive &nbsp;·&nbsp; Graduation &nbsp;·&nbsp; Wedding &nbsp;·&nbsp; Event &nbsp;·&nbsp; Fashion &nbsp;·&nbsp; Real Estate &nbsp;·&nbsp; Automotive &nbsp;·&nbsp; Graduation &nbsp;·&nbsp; Wedding &nbsp;·&nbsp; Event &nbsp;·&nbsp; Fashion &nbsp;·&nbsp; Real Estate &nbsp;·&nbsp; Automotive &nbsp;·&nbsp; Graduation &nbsp;·&nbsp; Wedding &nbsp;·&nbsp; Event &nbsp;·&nbsp; Fashion &nbsp;·&nbsp; Real Estate &nbsp;·&nbsp; Automotive &nbsp;·&nbsp; Graduation &nbsp;·&nbsp;
+  </span>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grain"></div>
+  <div class="hero-line"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Bangkok-based Videography Studio</div>
+    <h1 class="hero-title">
+      We Capture<br>
+      <em>Moments</em><br>
+      That Last
+    </h1>
+    <p class="hero-sub">Professional video shooting and editing for weddings, events, fashion, real estate, automotive, and graduation — crafted with cinematic precision.</p>
+    <div class="hero-cta">
+      <a href="#portfolio" class="btn-primary">
+        View Our Work
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#packages" class="btn-outline">See Pricing</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- Services -->
+<section class="services" id="services">
+  <div class="services-header">
+    <div>
+      <div class="section-label reveal">What We Do</div>
+      <h2 class="section-title reveal reveal-delay-1">Every Frame<br>Tells a <em>Story</em></h2>
+    </div>
+    <p class="section-desc reveal reveal-delay-2">We specialize in cinematic storytelling across six distinct categories. From intimate wedding moments to high-end automotive films — each project receives our full creative focus.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-num">01</div>
+      <div class="service-name">Wedding</div>
+      <p class="service-desc">Cinematic wedding films that preserve the emotion, laughter, and tears of your most important day.</p>
+      <span class="service-tag">Emotional · Cinematic</span>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <div class="service-num">02</div>
+      <div class="service-name">Event</div>
+      <p class="service-desc">Corporate events, conferences, concerts — we capture the energy and highlight the key moments.</p>
+      <span class="service-tag">Dynamic · Coverage</span>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="service-num">03</div>
+      <div class="service-name">Fashion</div>
+      <p class="service-desc">High-concept fashion films with editorial flair. Brand campaigns, lookbooks, and runway documentation.</p>
+      <span class="service-tag">Editorial · Luxury</span>
+    </div>
+    <div class="service-card reveal reveal-delay-3">
+      <div class="service-num">04</div>
+      <div class="service-name">Real Estate</div>
+      <p class="service-desc">Property showcase videos that elevate listings. Aerial tours, interior walkthroughs, lifestyle narratives.</p>
+      <span class="service-tag">Architectural · Detail</span>
+    </div>
+    <div class="service-card reveal reveal-delay-4">
+      <div class="service-num">05</div>
+      <div class="service-name">Automotive</div>
+      <p class="service-desc">Dynamic car films with dramatic angles, motion blur, and the visceral detail that automotive lovers expect.</p>
+      <span class="service-tag">Dynamic · Precision</span>
+    </div>
+    <div class="service-card reveal reveal-delay-5">
+      <div class="service-num">06</div>
+      <div class="service-name">Graduation</div>
+      <p class="service-desc">Milestone moments deserving more than a photo. Full ceremony coverage and personal highlight reels.</p>
+      <span class="service-tag">Personal · Memorable</span>
+    </div>
+  </div>
+</section>
+
+<!-- Portfolio -->
+<section class="portfolio" id="portfolio">
+  <div class="section-label reveal">Selected Work</div>
+  <h2 class="section-title reveal reveal-delay-1">Our <em>Portfolio</em></h2>
+  <div class="portfolio-grid">
+    <div class="portfolio-item reveal">
+      <div class="portfolio-thumb">
+        <div class="thumb-bg grad-1"></div>
+        <div class="thumb-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+      </div>
+      <div class="portfolio-info">
+        <div class="portfolio-cat">Wedding</div>
+        <div class="portfolio-title">Khun Natt & Khun James — Bangkok</div>
+      </div>
+    </div>
+    <div class="portfolio-item reveal reveal-delay-1">
+      <div class="portfolio-thumb">
+        <div class="thumb-bg grad-2"></div>
+        <div class="thumb-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+      </div>
+      <div class="portfolio-info">
+        <div class="portfolio-cat">Automotive</div>
+        <div class="portfolio-title">BMW M Series — Commercial</div>
+      </div>
+    </div>
+    <div class="portfolio-item reveal reveal-delay-2">
+      <div class="portfolio-thumb">
+        <div class="thumb-bg grad-5"></div>
+        <div class="thumb-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+      </div>
+      <div class="portfolio-info">
+        <div class="portfolio-cat">Fashion</div>
+        <div class="portfolio-title">Summer Collection — Siam</div>
+      </div>
+    </div>
+    <div class="portfolio-item reveal reveal-delay-3">
+      <div class="portfolio-thumb">
+        <div class="thumb-bg grad-3"></div>
+        <div class="thumb-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+      </div>
+      <div class="portfolio-info">
+        <div class="portfolio-cat">Real Estate</div>
+        <div class="portfolio-title">Luxury Condo — Sukhumvit</div>
+      </div>
+    </div>
+    <div class="portfolio-item reveal reveal-delay-4">
+      <div class="portfolio-thumb">
+        <div class="thumb-bg grad-4"></div>
+        <div class="thumb-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+      </div>
+      <div class="portfolio-info">
+        <div class="portfolio-cat">Graduation</div>
+        <div class="portfolio-title">Chulalongkorn — Class of 2024</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Packages -->
+<section class="packages" id="packages">
+  <div class="packages-inner">
+    <div class="packages-header">
+      <div class="section-label reveal">Transparent Pricing</div>
+      <h2 class="section-title reveal reveal-delay-1">Simple, Clear <em>Packages</em></h2>
+    </div>
+
+    <div class="pricing-tabs reveal">
+      <button class="tab-btn active" onclick="switchTab('shoot')">Shooting</button>
+      <button class="tab-btn" onclick="switchTab('edit')">Editing</button>
+      <button class="tab-btn" onclick="switchTab('bundle')">Bundles</button>
+    </div>
+
+    <!-- Shooting -->
+    <div class="pricing-panel active" id="tab-shoot">
+      <div class="price-card reveal">
+        <div class="price-tier">Standard</div>
+        <div class="price-name">Video Shoot</div>
+        <div class="price-amount">
+          <span class="price-value">5,000</span>
+          <span class="price-currency">THB / day</span>
+        </div>
+        <p class="price-note">Full day shoot (up to 8 hrs). Ideal for weddings, events, real estate & graduation.</p>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li>Up to 8 hours on location</li>
+          <li>Professional camera setup</li>
+          <li>Raw footage delivery</li>
+          <li>Suitable for all 6 categories</li>
+        </ul>
+      </div>
+      <div class="price-card featured reveal reveal-delay-1">
+        <div class="price-tier">Premium</div>
+        <div class="price-name">Commercial Shoot</div>
+        <div class="price-amount">
+          <span class="price-value">10,000</span>
+          <span class="price-currency">THB / day</span>
+        </div>
+        <p class="price-note">High-production commercial-grade shooting. Ideal for fashion, automotive & brand campaigns.</p>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li>Up to 8 hours on location</li>
+          <li>Multi-angle / advanced setup</li>
+          <li>Director-level creative direction</li>
+          <li>Ideal for Fashion & Automotive</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Editing -->
+    <div class="pricing-panel" id="tab-edit">
+      <div class="price-card reveal">
+        <div class="price-tier">Standard</div>
+        <div class="price-name">Short Edit</div>
+        <div class="price-amount">
+          <span class="price-value">1,500</span>
+          <span class="price-currency">THB</span>
+        </div>
+        <p class="price-note">30 seconds to 1 minute. Perfect for social media highlights and reels.</p>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li>30 sec – 1 min final output</li>
+          <li>Color grading included</li>
+          <li>Licensed music</li>
+          <li>2 revision rounds</li>
+        </ul>
+      </div>
+      <div class="price-card featured reveal reveal-delay-1">
+        <div class="price-tier">Standard</div>
+        <div class="price-name">Full Edit</div>
+        <div class="price-amount">
+          <span class="price-value">3,000</span>
+          <span class="price-currency">THB</span>
+        </div>
+        <p class="price-note">1 to 3 minutes. Ideal for wedding films, event highlights, and property tours.</p>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li>1 – 3 min final output</li>
+          <li>Full color grade + LUT</li>
+          <li>Licensed music</li>
+          <li>Motion titles & graphics</li>
+        </ul>
+      </div>
+      <div class="price-card reveal reveal-delay-2">
+        <div class="price-tier">Commercial</div>
+        <div class="price-name">Commercial Short</div>
+        <div class="price-amount">
+          <span class="price-value">2,500</span>
+          <span class="price-currency">THB</span>
+        </div>
+        <p class="price-note">30 seconds to 1 minute commercial-grade edit with advanced motion graphics.</p>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li>30 sec – 1 min output</li>
+          <li>Advanced color pipeline</li>
+          <li>Motion design elements</li>
+          <li>Brand asset integration</li>
+        </ul>
+      </div>
+      <div class="price-card reveal reveal-delay-3">
+        <div class="price-tier">Commercial</div>
+        <div class="price-name">Commercial Full</div>
+        <div class="price-amount">
+          <span class="price-value">5,000</span>
+          <span class="price-currency">THB</span>
+        </div>
+        <p class="price-note">1 to 3 minutes. Full commercial production value with cinematic grade finish.</p>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li>1 – 3 min output</li>
+          <li>Cinematic color mastering</li>
+          <li>VFX & brand elements</li>
+          <li>Broadcast-ready delivery</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bundles -->
+    <div class="pricing-panel" id="tab-bundle">
+      <div class="price-card featured reveal">
+        <div class="price-tier">Best Value</div>
+        <div class="price-name">Wedding Bundle</div>
+        <div class="price-amount">
+          <span class="price-value">7,500</span>
+          <span class="price-currency">THB</span>
+        </div>
+        <p class="price-note">Full day shoot + 3-min cinematic wedding film. Save 500 THB vs. separate booking.</p>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li>Full day wedding shoot</li>
+          <li>1–3 min cinematic edit</li>
+          <li>Color grade + music</li>
+          <li>500 THB savings</li>
+        </ul>
+      </div>
+      <div class="price-card reveal reveal-delay-1">
+        <div class="price-tier">Best Value</div>
+        <div class="price-name">Event Bundle</div>
+        <div class="price-amount">
+          <span class="price-value">7,500</span>
+          <span class="price-currency">THB</span>
+        </div>
+        <p class="price-note">Full day event shoot + polished highlight reel. Perfect for corporate and social events.</p>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li>Full day event coverage</li>
+          <li>1–3 min highlight reel</li>
+          <li>Branded lower thirds</li>
+          <li>500 THB savings</li>
+        </ul>
+      </div>
+      <div class="price-card reveal reveal-delay-2">
+        <div class="price-tier">Premium Bundle</div>
+        <div class="price-name">Commercial Bundle</div>
+        <div class="price-amount">
+          <span class="price-value">14,000</span>
+          <span class="price-currency">THB</span>
+        </div>
+        <p class="price-note">Commercial shoot + full commercial edit. Perfect for fashion & automotive brands.</p>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li>Commercial shoot (full day)</li>
+          <li>Commercial edit 1–3 min</li>
+          <li>Advanced VFX & grade</li>
+          <li>1,000 THB savings</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="weekend-badge reveal">Available Weekends Only — Saturday & Sunday</div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section class="contact" id="contact">
+  <div class="contact-inner">
+    <div class="section-label reveal" style="justify-content:center">Book a Session</div>
+    <h2 class="contact-title reveal reveal-delay-1">
+      Let's Create<br>Something <em>Beautiful</em>
+    </h2>
+    <p class="contact-sub reveal reveal-delay-2">
+      We're available every Saturday and Sunday. Limited slots per weekend — book early to secure your date.
+    </p>
+    <div class="contact-options reveal reveal-delay-3">
+      <a href="https://line.me" class="contact-link">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.03 2 11c0 3.04 1.6 5.74 4.08 7.46L5 22l4.28-2.29C10.14 19.9 11.05 20 12 20c5.52 0 10-4.03 10-9S17.52 2 12 2z"/></svg>
+        Add us on LINE
+      </a>
+      <a href="https://instagram.com" class="contact-link">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        @lensandframe.bkk
+      </a>
+      <a href="mailto:hello@lensandframe.co" class="contact-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        hello@lensandframe.co
+      </a>
+    </div>
+    <div class="availability reveal reveal-delay-4">
+      <span class="avail-dot"></span>
+      Accepting bookings for upcoming weekends
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>© 2025 Lens & Frame Studio — Bangkok, Thailand</p>
+  <p>Weekends Only · Sat & Sun</p>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  (function animateCursor() {
+    rx += (mx - rx) * 0.15;
+    ry += (my - ry) * 0.15;
+    if (cursor) { cursor.style.left = mx + 'px'; cursor.style.top = my + 'px'; }
+    if (ring) { ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; }
+    requestAnimationFrame(animateCursor);
+  })();
+
+  // Tab switching
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach((b, i) => {
+      b.classList.toggle('active', ['shoot','edit','bundle'][i] === tab);
+    });
+    document.querySelectorAll('.pricing-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+  }
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => io.observe(el));
+</script>
+</body>
+</html>
